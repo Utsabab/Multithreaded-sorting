@@ -79,7 +79,7 @@ void merge_sort(int start, int end) {
 int main(int argc, char** argv)
 {
 	FILE * fp;
-	if (argc>1) {
+	if (argc == 2) {
 		fp = fopen(argv[1], "r");			//read through user input
 	}
 	else {
@@ -88,24 +88,24 @@ int main(int argc, char** argv)
 
 	char * num = NULL;
 	size_t len = 0;
-	int counter = 0;
+	int counter = -1;
 	ssize_t read;
 
 	while ((read = getline(&num, &len, fp)) != -1) {
 		counter++;
 	}
 
-	if (argc>1) {
+	if (argc == 2) {
 		fp = fopen(argv[1], "r");
 	}
 	else {
-		fp =fopen("test.txt", "r");
+		fp = fopen("test.txt", "r");
 	}
 
 	nums = (int *) malloc(counter * sizeof(int));
 
 	int i = 0;
-	printf("This is the unsorted numbers from array: \n");
+	printf("\nThis is the unsorted integers from input file: \n");
 	while ((read = getline(&num, &len, fp)) != -1) {
 
 		nums[i] = atoi(num);
@@ -126,14 +126,21 @@ int main(int argc, char** argv)
 
 	/*Start and end values for first thread to begin sorting*/
 	param1.start = 0;
-	param1.end = counter / 2;
-	param1.is_sorting_thread = 1;
-
-
+	param1.end = (counter / 2);
+	param1.is_sorting_thread = 1;	
+	printf("\n\nPart 1 of the original array to be sorted by Thread1");
+	for (i=0;i<=param1.end;i++){
+		printf("\n%d",  nums[i]);
+	} 
+	 	
 	/*Start and end values for second thread to begin sorting*/
 	param2.start = (counter / 2) + 1;
 	param2.end = counter;
 	param2.is_sorting_thread = 1;
+	printf("\n\nPart 2 of the original array to be sorted by Thread2");
+	for (i=param2.start;i<=param2.end;i++){
+		printf("\n%d",  nums[i]);
+	} 
 
 	/*Start and end values for third thread to merge two other arrays into one*/
 	param3.start = 0;
@@ -141,17 +148,15 @@ int main(int argc, char** argv)
 	param3.is_sorting_thread = 0;
 
 	pthread_create(&thread1, NULL, thread_divider, &param1);
-
 	pthread_create(&thread2, NULL, thread_divider, &param2);
 
-	
 	pthread_join(thread1, NULL);
 	pthread_join(thread2, NULL);
 
 	pthread_create(&thread3, NULL, thread_divider, &param3);
 	pthread_join(thread3, NULL);
 
-	printf("\n\nThis is the sorted integers from array: \n");
+	printf("\n\nThis is the sorted integers from input file: \n");
 
 	for (i=0;i<=counter;i++){
 		printf("%d \n",  nums[i]);
@@ -164,10 +169,10 @@ void *thread_divider(void *ptr)
 {	
 	struct param *data = ptr;
 	if (data->is_sorting_thread == 1) {
-		merge_sort(data->start, data->end);
+		merge_sort(data->start, data->end); 	
 	}
 	else {
-		int mid = (data-> start + data->end) / 2;
+		int mid = (data->start + data->end) / 2; 
 		merger(data->start, mid, data->end);
 	} 
 }
