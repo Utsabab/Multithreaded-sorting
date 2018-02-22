@@ -128,7 +128,7 @@ int main(int argc, char** argv)
 	param1.start = 0;
 	param1.end = (counter / 2);
 	param1.is_sorting_thread = 1;	
-	printf("\n\nPart 1 of the original array to be sorted by Thread1");
+	printf("\n\nPart 1 of the original array to be sorted by Thread1:");
 	for (i=0;i<=param1.end;i++){
 		printf("\n%d",  nums[i]);
 	} 
@@ -137,7 +137,7 @@ int main(int argc, char** argv)
 	param2.start = (counter / 2) + 1;
 	param2.end = counter;
 	param2.is_sorting_thread = 1;
-	printf("\n\nPart 2 of the original array to be sorted by Thread2");
+	printf("\n\nPart 2 of the original array to be sorted by Thread2:");
 	for (i=param2.start;i<=param2.end;i++){
 		printf("\n%d",  nums[i]);
 	} 
